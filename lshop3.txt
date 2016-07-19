@@ -37,7 +37,7 @@ if(first()){
     }
     State = 0
     Scan = 1
-    Version = 1.01
+    Version = 1.03
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
 }
 
