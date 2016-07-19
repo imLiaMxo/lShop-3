@@ -1,0 +1,437 @@
+@name lShop 3
+@inputs EGP:wirelink U:entity
+@outputs [Fire Door]:number
+@persist User:entity
+@persist [StoreName Code]:string
+@persist [State E Scan Speed Profit Request Hack Percent CheckUpdate Update Version NewVersion]:number
+@persist Shipments:array
+
+interval(100)
+runOnChat(1)
+runOnHTTP(1)
+
+if(first()){
+    
+    StoreName = "Liam's Arms v1"
+    Speed = 12
+    Profit = 2500
+    
+    function number onClick(ID) {
+        local Cursor = EGP:egpCursor(User)
+        local Size = EGP:egpSize(ID) / 2
+        local A = EGP:egpPos(ID) + Size
+        local B = EGP:egpPos(ID) - Size
+        local Max = max(A, B)
+        local Min = min(A, B)
+        return inrange(Cursor, Min, Max)
+    }
+    function number entity:sound(ID:number,S:string) {
+        This:soundPlay(ID,0,S)
+        return 1
+    }
+    function string entity:sound(ID:string,S:string) {
+        This:soundPlay(ID,0,S)
+    }
+    function void cMsg(Text:string) {
+        printColor(vec(),"[",vec(32,178,170),"L-Shop 3",vec(),"] ",vec(255,150,0),Text:replace("%red",""):replace("%no",""))
+    }
+    State = 0
+    Scan = 1
+    Version = 1.01
+    cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
+}
+
+if(changed(round(State))){
+    local State = round(State)
+    
+    EGP:egpClear()
+    EGP:egpBox(1,vec2(256,256),vec2(526,526))
+    EGP:egpColor(1,vec(35,35,35))
+    
+    EGP:egpBox(2,vec2(256,31),vec2(512,60))
+    EGP:egpColor(2,vec(255,215,0))
+        
+    EGP:egpBoxOutline(3,vec2(256,31),vec2(512,60))
+    
+    if(State == 0){
+
+        EGP:egpText(4,StoreName,vec2(256,31))
+        EGP:egpAlign(4,2,1)
+        EGP:egpSize(4,40)
+        
+        EGP:egpLine(5,vec2(112,60),vec2(112,512))
+        EGP:egpSize(5,2)
+        
+        EGP:egpLine(6,vec2(412,60),vec2(412,512))
+        EGP:egpSize(6,2)
+        
+        EGP:egpText(7,"Press E to begin",vec2(256,256))
+        EGP:egpSize(7,35)
+        EGP:egpAlign(7,1)
+    }
+    
+    if(State == 1){
+        #Basically this is like a shitty intro with animations, bla bla hacker style etc. OPS rush inbound :D
+        EGP:egpText(4,"Launching C:/Users/Liam/Store.exe",vec2(456,31))
+        EGP:egpAlign(4,2,1)
+        EGP:egpSize(4,30)
+        
+        EGP:egpBox(8,vec2(156,133),vec2(230,30))
+        EGP:egpText(9,"Command Prompt    -      X",vec2(46,123))
+        EGP:egpSize(9,20)
+        EGP:egpColor(9,vec(0,0,0))
+        
+        EGP:egpBox(10,vec2(156,266),vec2(230,240))
+        EGP:egpColor(10,vec(0,0,0))
+        
+        EGP:egpText(11,"Microsoft Windows [Version 10.0.10586]",vec2(46,150))
+        EGP:egpSize(11,10)
+        
+        EGP:egpText(12,"exec 'C:/Users/Liam/Store.exe'",vec2(46,160))
+        EGP:egpSize(12,10)
+        EGP:egpAlpha(12,0)
+        
+        EGP:egpText(13,"C:/Users/Liam/Store.exe starting...",vec2(46,170))
+        EGP:egpSize(13,10)
+        EGP:egpAlpha(13,0)
+        
+        EGP:egpText(14,"C:/Users/Liam/Store.exe loaded",vec2(46,180))
+        EGP:egpSize(14,10)
+        EGP:egpAlpha(14,0)
+        
+        if(Shipments:count() < 1){
+            EGP:egpText(15,"ERROR Couldn't include C:/Users/Liam/Shipments.pby",vec2(46,190))
+            EGP:egpSize(15,10)
+            EGP:egpAlpha(15,0)
+            
+            EGP:egpText(16,"Exitting CMD",vec2(46,200))
+            EGP:egpSize(16,10)
+            EGP:egpAlpha(16,0)
+        } else {
+            EGP:egpText(15,"Included C:/Users/Liam/Shipments.pby",vec2(46,190))
+            EGP:egpSize(15,10)
+            EGP:egpAlpha(15,0)
+            
+            EGP:egpText(16,"Launching executable",vec2(46,200))
+            EGP:egpSize(16,10)
+            EGP:egpAlpha(16,0)
+        }
+        
+        EGP:egpBox(17,vec2(256,233),vec2(230,30))
+        EGP:egpAlpha(17,0)
+        
+        EGP:egpText(18,"Store.exe                  -      X",vec2(146,223))
+        EGP:egpSize(18,20)
+        EGP:egpColor(18,vec(0,0,0))
+        EGP:egpAlpha(18,0)
+        
+        EGP:egpBox(19,vec2(256,276),vec2(230,60))
+        EGP:egpColor(19,vec(0,0,0))
+        EGP:egpAlpha(19,0)
+        
+        EGP:egpBox(20,vec2(256,276),vec2(180,30))
+        EGP:egpColor(20,vec(0,0,155))
+        EGP:egpAlpha(20,0)
+        
+        EGP:egpText(21,"Loaded",vec2(216,263))
+        EGP:egpSize(21,25)
+        EGP:egpAlpha(21,0)
+    }
+    
+    if(State == 2){
+        EGP:egpText(4,"Application: Store.exe (x64)",vec2(472,31))
+        EGP:egpAlign(4,2,1)
+        EGP:egpSize(4,40)
+        
+        EGP:egpBox(22,vec2(256,100),vec2(356,30))
+        
+        EGP:egpBox(23,vec2(256,266),vec2(356,300))
+        EGP:egpColor(23,vec(0,0,0))
+        
+        EGP:egpBox(24,vec2(406,100),vec2(30,30))
+        EGP:egpColor(24,vec(255,255,255))
+        
+        EGP:egpText(25,"Store.exe                   -    X",vec2(90,85))
+        EGP:egpSize(25,30)
+        EGP:egpColor(25,vec(0))
+        
+        EGP:egpBox(46,vec2(286,100),vec2(30,30))
+        EGP:egpMaterial(46,"vgui/servers/icon_password")
+        
+        for(I = 1,Shipments:count()){
+            EGP:egpBoxOutline(I + 26,vec2(256,85 + (I * 60)),vec2(296,50))
+            if(Shipments[I,entity]){
+                EGP:egpText(I + 31,"Purchase "+Shipments[I,entity]:shipmentName()+ " : $"+(Shipments[I,entity]:shipmentPrice() / 10 + Profit),vec2(236,85 + (I * 60) - 10))
+                EGP:egpAlign(I + 31, 1)
+                
+                EGP:egpBox(I + 38,vec2(393,85 + (I * 60)),vec2(20,48))
+                if(User:money() >= (Shipments[I,entity]:shipmentPrice() / 10 + Profit)){
+                    EGP:egpColor(I + 38,vec(0,255,0))
+                } else {
+                    EGP:egpColor(I + 38,vec(255,0,0))
+                }
+            }
+        }
+    }
+    
+    if(State == 3){
+        EGP:egpText(4,"Application: Thanks.exe (x64)",vec2(472,31))
+        EGP:egpAlign(4,2,1)
+        EGP:egpSize(4,40)
+        
+        EGP:egpText(45,"Thanks for shopping!",vec2(256,256))
+        EGP:egpSize(45,30)
+        EGP:egpAlign(45,1,45)
+    }
+    
+    if(State == 4){
+        EGP:egpText(4,"Injecting root/bin/inj/boot.pby",vec2(456,31))
+        EGP:egpAlign(4,2,1)
+        EGP:egpSize(4,30)
+        
+        EGP:egpBox(8,vec2(156,133),vec2(230,30))
+        EGP:egpText(9,"Command Prompt    -      X",vec2(46,123))
+        EGP:egpSize(9,20)
+        EGP:egpColor(9,vec(0,0,0))
+        
+        EGP:egpBox(10,vec2(156,266),vec2(230,240))
+        EGP:egpColor(10,vec(0,0,0))
+        
+        EGP:egpText(11,"Microsoft Windows [Version 10.0.10586]",vec2(46,150))
+        EGP:egpSize(11,10)
+        
+        EGP:egpText(12,"exec 'root/bin/inj/boot.pby'",vec2(46,160))
+        EGP:egpSize(12,10)
+        EGP:egpAlpha(12,0)
+        
+        EGP:egpText(13,"root/bin/inj/boot.pby starting...",vec2(46,170))
+        EGP:egpSize(13,10)
+        EGP:egpAlpha(13,0)
+        
+        EGP:egpText(14,"root/bin/inj/boot.pby loading " + Percent + "%...",vec2(46,180))
+        EGP:egpSize(14,10)
+        EGP:egpAlpha(14,0)
+        
+        EGP:egpText(15,"root/bin/inj/boot.pby injected.",vec2(46,190))
+        EGP:egpSize(15,10)
+        EGP:egpAlpha(15,0)
+    }
+}
+   
+if(chatClk(owner())){
+    local Msg = owner():lastSaid():explode(" ")
+    local Cmd = Msg[1,string]
+        
+    if(Cmd == "!del"){
+        if(Shipments:count() > 0){
+            Shipments:clear()
+            cMsg("Cleared Array: Shipments")
+        } else {
+            cMsg("Unable to clear an empty array.")
+        }
+    }
+    
+    if(Cmd == "!checkupdate"){
+        CheckUpdate = 1
+    }
+    if(Cmd == "!update"){
+        Update = 1
+    }
+}
+
+if(Scan == 1){
+    findClearBlackList()
+    findClearWhiteList()
+    findIncludeClass("spawned_shipment")
+    findInSphere(entity():pos(),300)
+    Shipments = findToArray()
+    
+    if(Shipments:count() > 0){
+        cMsg("Found: " + Shipments:count() + " shipments!")
+    } else {
+        cMsg("Unable to find any shipments. Please place some")
+    }
+    Scan = 0
+}
+
+if(State == 0){
+    if(EGP["User",entity]:isPlayer()){
+        User = EGP["User",entity]
+        State = 1
+        Scan = 1
+        EGP:entity():sound(1,"buttons/button16.wav")
+    }
+}
+
+if(State == 1){
+    timer("1",500)
+    if(clk("1")){
+        EGP:egpAlpha(12,255)
+        timer("2",500)
+    }
+    if(clk("2")){
+        EGP:egpAlpha(13,255)
+        timer("3",500)
+    }
+    if(clk("3")){
+        EGP:egpAlpha(14,255)
+        timer("4",500)
+    }
+    if(clk("4")){
+        EGP:egpAlpha(15,255)
+        timer("5",500)
+    }
+    if(clk("5")){
+        EGP:egpAlpha(16,255)
+        if(Shipments:count() < 1){ 
+            timer("exit",1000)
+        } else {
+            timer("load",500)
+        }
+    }
+    if(clk("load")){
+        for(I = 17, 21){
+            EGP:egpAlpha(I,255)
+        }
+        timer("state",1000)
+    }
+    if(clk("state")){
+        State = 2
+    }
+    if(clk("exit")){
+        State = 0
+        exit()
+    }
+}
+
+if(State > 0 && State < 4){
+    if(User:pos():distance(EGP:entity():pos()) > 120){
+        State = 0
+        exit()
+    }
+}
+
+if(State == 2){
+    E = User:keyUse()
+    
+    if(changed(E) & E){
+        if(onClick(24)){
+            State = 0
+            exit()
+            EGP:entity():sound(1,"buttons/button16.wav")
+        }
+        if(onClick(46) && User:team():teamName():find("Thief")){
+            State = 4
+        }
+        for(I = 1, Shipments:count()){
+            if(onClick(I + 26)){
+                EGP:entity():sound(1,"buttons/button16.wav")
+                Request = I
+                moneyRequest(User,(Shipments[Request,entity]:shipmentPrice() / 10 + Profit), "Liam's Arms -> Checkout")                
+            }
+        }
+    }
+    
+    if(moneyNoClk()){
+        State = 0
+        exit()
+    }
+    if(moneyClk()){
+        State = 3
+        cMsg(User:name() + " has purchased a " + Shipments[Request,entity]:shipmentName() + " : $"+Shipments[Request,entity]:shipmentPrice() / 10 + " ($" + Profit + " profit.)")
+    }   
+}
+
+if(State == 3){
+    timer("init",100)
+    if(clk("init")){
+        U:setPos(Shipments[Request,entity]:pos() + vec(0,0,10))
+        U:setAng(ang(0,-90,0))
+        timer("fire",100)
+    }
+    if(clk("fire")){
+        Fire = 1
+        timer("reset",5000)
+    }
+    if(clk("reset")){
+        Fire = 0
+        U:setPos(entity():pos() + vec(0,0,10))
+        State = 0
+        exit()
+    }
+}
+
+if(State == 4){
+    if(Hack){
+        Percent++
+        EGP:egpSetText(14,"root/bin/inj/boot.pby loading " + Percent + "%...")
+    }
+    timer("1",100)
+    if(clk("1")){
+        EGP:egpAlpha(12,255)
+        timer("2",500)
+    }
+    if(clk("2")){
+        EGP:egpAlpha(13,255)
+        timer("3",500)
+    }
+    if(clk("3")){
+        EGP:egpAlpha(14,255)
+        Hack = 1
+    }
+    if(Percent >= 100){
+        Hack = 0
+        EGP:egpAlpha(15,255)
+        timer("move",1000)
+    }
+    if(clk("move")){
+        timer("reset_store",10000)
+        Door = 1
+    }
+    if(clk("reset_store")){
+        Door = 0
+        State = 0
+        exit()
+    }
+}
+
+if(CheckUpdate){
+    #ifdef if(httpCanRequest()){
+        httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION")
+        timer("check update",1000)
+    }
+    #else 
+        print("HTTP not available on the current server, download the latest version here!")
+        print("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/")
+    #endif
+    
+    if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION"){
+        VersionData = httpData()
+        NewVersion = VersionData:toNumber()
+        if(Version != NewVersion){
+            print("New Version Detected: Type !update to download version [ " + NewVersion + " ]")
+            CheckUpdate = 0
+        }
+    }
+}
+
+if(Update){
+    timer("begin_update",1000)
+    
+    if(clk("begin_update")){
+        if(httpCanRequest()){
+            httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/lshop3.txt")
+        } else {
+            print("Cannot reach address to update, please try again or download manually.")
+        }
+    }
+    if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/lshop3.txt"){
+        Code = httpData()
+        if(fileCanWrite()){
+            fileWrite(">e2shared/"+"lshop3.txt",Code)
+            print("Saved file to: e2shared/lshop3.txt  !")
+        } else {
+            print("Failed to download latest E2! Please do it manually!")
+        }
+    }
+}
