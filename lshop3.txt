@@ -2,13 +2,13 @@
 @inputs EGP:wirelink U:entity
 @outputs [Fire Door]:number
 @persist User:entity
-@persist [StoreName Code]:string
-@persist [State E Scan Speed Profit Request Hack Percent CheckUpdate Update Version NewVersion]:number
+@persist [StoreName Code Version NewVersion]:string
+@persist [State E Scan Speed Profit Request Hack Percent CheckUpdate Update]:number
 @persist Shipments:array
 
 interval(100)
 runOnChat(1)
-runOnHTTP(1)
+#runOnHTTP(1)
 
 if(first()){
     
@@ -37,7 +37,7 @@ if(first()){
     }
     State = 0
     Scan = 1
-    Version = 1.03
+    Version = "v1.04"
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
 }
 
@@ -232,9 +232,11 @@ if(chatClk(owner())){
     }
     
     if(Cmd == "!checkupdate"){
+        hideChat(1)
         CheckUpdate = 1
     }
     if(Cmd == "!update"){
+        hideChat(1)
         Update = 1
     }
 }
@@ -395,21 +397,29 @@ if(State == 4){
     }
 }
 
-if(CheckUpdate){
-    #ifdef if(httpCanRequest()){
-        httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION")
+#[if(CheckUpdate){
+    if(httpCanRequest()){
+        httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION.txt")
+        cMsg("Checking Update...")
         timer("check update",1000)
+    } else {
+        cMsg("Could not request HTTP.")
+        CheckUpdate = 0
     }
-    #else 
-        print("HTTP not available on the current server, download the latest version here!")
-        print("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/")
-    #endif
     
-    if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION"){
-        VersionData = httpData()
-        NewVersion = VersionData:toNumber()
+    if(clk("check update")){
+        if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION.txt"){
+            NewVersion = httpData()
+            timer("update verify",1000)
+        }
+    }
+    
+    if(clk("update verify")){
         if(Version != NewVersion){
-            print("New Version Detected: Type !update to download version [ " + NewVersion + " ]")
+            cMsg("New Version Detected: Type !update to download version [" + NewVersion + "]")
+            CheckUpdate = 0
+        } else {
+            cMsg("You're currently up to date!")
             CheckUpdate = 0
         }
     }
@@ -422,16 +432,20 @@ if(Update){
         if(httpCanRequest()){
             httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/lshop3.txt")
         } else {
-            print("Cannot reach address to update, please try again or download manually.")
+            cMsg("Cannot reach address to update, please try again or download manually.")
         }
     }
     if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/lshop3.txt"){
         Code = httpData()
         if(fileCanWrite()){
             fileWrite(">e2shared/"+"lshop3.txt",Code)
-            print("Saved file to: e2shared/lshop3.txt  !")
+            cMsg("Saved file to: e2shared/lshop3.txt  !")
+            Update = 0
         } else {
-            print("Failed to download latest E2! Please do it manually!")
+            cMsg("Failed to download latest E2! Please do it manually!")
+            Update = 0
         }
     }
 }
+]#
+
