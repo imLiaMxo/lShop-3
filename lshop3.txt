@@ -3,7 +3,7 @@
 @outputs [Fire Door]:number
 @persist User:entity
 @persist [StoreName Code Version NewVersion]:string
-@persist [State E Scan Speed Profit Request Hack Percent CheckUpdate Update]:number
+@persist [State E Scan Profit Request Hack Percent CheckUpdate Update]:number
 @persist Shipments:array
 
 interval(100)
@@ -13,8 +13,6 @@ runOnHTTP(1)
 if(first()){
     
     StoreName = "L-Shop 3"
-    Speed = 12
-    Profit = 2500
     
     function number onClick(ID) {
         local Cursor = EGP:egpCursor(User)
@@ -37,7 +35,7 @@ if(first()){
     }
     State = 0
     Scan = 1
-    Version = "v1.06"
+    Version = "v1.07"
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
 }
 
@@ -230,7 +228,15 @@ if(chatClk(owner())){
             cMsg("Unable to clear an empty array.")
         }
     }
-    
+    if(Cmd == "!profit"){
+        hideChat(1)
+        if(Msg[2,string] != ""){
+            Profit = Msg[2,string]:toNumber()
+            cMsg("Profit set to: " + Profit:toString())
+        } else {
+            cMsg("Please enter a valid number... E.G '!profit 2500'")
+        }
+    }
     if(Cmd == "!checkupdate"){
         hideChat(1)
         CheckUpdate = 1
@@ -424,6 +430,7 @@ if(Update){
             httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/lshop3.txt")
         } else {
             cMsg("Cannot reach address to update, please try again or download manually. How to is on the github.")
+            cMsg("https://github.com/imLiaMxo/lShop-3/edit/master/README.md")
         }
     }
     if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/lshop3.txt"){
@@ -434,6 +441,7 @@ if(Update){
             Update = 0
         } else {
             cMsg("Failed to download latest E2! Please do it manually! How to is on the github.")
+            cMsg("https://github.com/imLiaMxo/lShop-3/edit/master/README.md")
             Update = 0
         }
     }
