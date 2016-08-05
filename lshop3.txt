@@ -12,7 +12,7 @@ runOnHTTP(1)
 
 if(first()){
     
-    StoreName = "Liam's Arms v1"
+    StoreName = "L-Shop 3"
     Speed = 12
     Profit = 2500
     
@@ -24,6 +24,13 @@ if(first()){
         local Max = max(A, B)
         local Min = min(A, B)
         return inrange(Cursor, Min, Max)
+    }
+    function number entity:sound(ID:number,S:string) {
+        This:soundPlay(ID,0,S)
+        return 1
+    }
+    function string entity:sound(ID:string,S:string) {
+        This:soundPlay(ID,0,S)
     }
     function void cMsg(Text:string) {
         printColor(vec(),"[",vec(32,178,170),"L-Shop 3",vec(),"] ",vec(255,150,0),Text:replace("%red",""):replace("%no",""))
@@ -48,7 +55,7 @@ if(changed(round(State))){
     
     if(State == 0){
 
-        EGP:egpText(4,StoreName,vec2(256,31))
+        EGP:egpText(4,StoreName,vec2(156,31))
         EGP:egpAlign(4,2,1)
         EGP:egpSize(4,40)
         
@@ -253,7 +260,7 @@ if(State == 0){
     if(EGP["User",entity]:isPlayer()){
         User = EGP["User",entity]
         State = 1
-        Scan = 1
+        EGP:entity():sound(1,"buttons/button16.wav")
     }
 }
 
@@ -312,12 +319,14 @@ if(State == 2){
         if(onClick(24)){
             State = 0
             exit()
+            EGP:entity():sound(1,"buttons/button16.wav")
         }
         if(onClick(46) && User:team():teamName():find("Thief")){
             State = 4
         }
         for(I = 1, Shipments:count()){
             if(onClick(I + 26)){
+                EGP:entity():sound(1,"buttons/button16.wav")
                 Request = I
                 moneyRequest(User,(Shipments[Request,entity]:shipmentPrice() / 10 + Profit), "Liam's Arms -> Checkout")                
             }
@@ -351,6 +360,7 @@ if(State == 3){
         U:setPos(entity():pos() + vec(0,0,10))
         exit()
     }
+    Scan = 1
 }
 
 if(State == 4){
@@ -388,23 +398,11 @@ if(State == 4){
 }
 
 if(CheckUpdate){
-    if(httpCanRequest()){
-        timer("request",1000)
-    } else {
-        cMsg("Could not request HTTP.")
-        CheckUpdate = 0
-    }
+    httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION")
     
-    if(clk("request")){
-        httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION")
-        cMsg("Checking Update...")
-        timer("check update",1000)
-    }
-    if(clk("check update")){
-        if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION"){
-            NewVersion = httpData()
-            timer("update verify",1000)
-        }
+    if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/VERSION"){
+        NewVersion = httpData():trim()
+        timer("update verify",1000)
     }
     
     if(clk("update verify")){
@@ -425,17 +423,17 @@ if(Update){
         if(httpCanRequest()){
             httpRequest("https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/lshop3.txt")
         } else {
-            cMsg("Cannot reach address to update, please try again or download manually.")
+            cMsg("Cannot reach address to update, please try again or download manually. How to is on the github.")
         }
     }
     if(httpClk() & httpRequestUrl() == "https://raw.githubusercontent.com/imLiaMxo/lShop-3/master/lshop3.txt"){
         Code = httpData()
         if(fileCanWrite()){
-            fileWrite(">e2shared/"+"lshop3 - v"+NewVersion+".txt",Code)
-            cMsg("Saved file to: e2shared/lshop3.txt  !")
+            fileWrite(">e2shared/"+"lshop3 - "+NewVersion+".txt",Code)
+            cMsg("Saved file to: e2shared/"+"lshop3 - "+NewVersion+".txt  !")
             Update = 0
         } else {
-            cMsg("Failed to download latest E2! Please do it manually!")
+            cMsg("Failed to download latest E2! Please do it manually! How to is on the github.")
             Update = 0
         }
     }
