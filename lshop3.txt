@@ -32,7 +32,7 @@ if(first()){
     }
     State = 0
     Scan = 1
-    Version = "v1.08"
+    Version = "v1.12"
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
 }
 
