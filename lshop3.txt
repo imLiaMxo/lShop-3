@@ -3,7 +3,7 @@
 @outputs [Fire Door]:number
 @persist User:entity
 @persist [StoreName Code Version NewVersion]:string
-@persist [State E Scan Profit Request Hack Percent CheckUpdate Update]:number
+@persist [State E Scan Profit Request Hack Percent CheckOnStart CheckUpdate Update]:number
 @persist Shipments:array
 
 interval(100)
@@ -13,6 +13,7 @@ runOnHTTP(1)
 if(first()){
     
     StoreName = "L-Shop 3"
+    CheckOnStart = 1 #<-- If 1, the chip will check for an update once placed.
     
     function number onClick(ID) {
         local Cursor = EGP:egpCursor(User)
@@ -32,10 +33,18 @@ if(first()){
     }
     State = 0
     Scan = 1
-    Version = "v1.13"
+    Version = "v1.14"
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
+    timer("check_update_on_start",2000)
 }
 
+if(clk("check_update_on_start")){
+    if(CheckOnStart){
+        CheckUpdate = 1
+    } else {
+        cMsg("Update Check: Disabled.")
+    }
+}
 if(changed(round(State))){
     local State = round(State)
     
