@@ -12,3 +12,7 @@ Manual Installation:
 
 Notes:
 Always check updates ingame by typing '!checkupdate' and allow the E2 to do it's work.
+
+Changelog (Starting from v1.17):
+Update 1.17 - Added CheckOnStart which allows the chip to check updates on first place. Also fixed a bug with the loading.
+
