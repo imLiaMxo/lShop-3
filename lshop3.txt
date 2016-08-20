@@ -33,7 +33,7 @@ if(first()){
     }
     State = 0
     Scan = 1
-    Version = "v1.14"
+    Version = "v1.17"
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
     timer("check_update_on_start",2000)
 }
