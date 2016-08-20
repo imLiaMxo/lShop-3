@@ -33,7 +33,7 @@ if(first()){
     }
     State = 0
     Scan = 1
-    Version = "v1.17"
+    Version = "v1.18"
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
     timer("check_update_on_start",2000)
 }
@@ -367,12 +367,12 @@ if(State == 3){
         timer("reset",5000)
     }
     if(clk("reset")){
+        Scan = 1
         Fire = 0
         State = 0
         U:setPos(entity():pos() + vec(0,0,10))
         exit()
     }
-    Scan = 1
 }
 
 if(State == 4){
