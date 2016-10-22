@@ -1,9 +1,10 @@
 @name lShop 3
-@inputs EGP:wirelink U:entity
+@inputs EGP:wirelink [P U]:entity
 @outputs [Fire Door]:number
 @persist User:entity
-@persist [StoreName Code Version NewVersion]:string
-@persist [State E Scan Profit Request Hack Percent CheckOnStart CheckUpdate Update]:number
+@persist [StoreName Code Version NewVersion SoundPath]:string
+@persist [State E Scan SScan TimerCheck Profit Request Hack Percent CheckOnStart CheckUpdate Update Mode GAIN]:number
+@persist PStart:vector
 @persist Shipments:array
 
 interval(100)
@@ -14,6 +15,8 @@ if(first()){
     
     StoreName = "L-Shop 3"
     CheckOnStart = 1 #<-- If 1, the chip will check for an update once placed.
+    Mode = 1 #<-- Selects mode. (1 = Props, Music, Animated etc.) (0 = Normal, no props no music etc.)
+    SoundPath = "ambient/music/country_rock_am_radio_loop.wav"     #<-- Sound path for the music played. (Default: ambient/music/country_rock_am_radio_loop.wav)
     
     function number onClick(ID) {
         local Cursor = EGP:egpCursor(User)
@@ -31,9 +34,11 @@ if(first()){
     function void cMsg(Text:string) {
         printColor(vec(),"[",vec(32,178,170),"L-Shop 3",vec(),"] ",vec(255,150,0),Text:replace("%red",""):replace("%no",""))
     }
-    State = 0
     Scan = 1
-    Version = "v1.18"
+    SScan = 0
+    State = 0
+    Version = "v2.01"
+    PStart = P:pos()
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
     timer("check_update_on_start",2000)
 }
@@ -260,10 +265,12 @@ if(Scan == 1){
     findInSphere(entity():pos(),200)
     Shipments = findToArray()
     
-    if(Shipments:count() > 0){
-        cMsg("Found: " + Shipments:count() + " shipments!")
-    } else {
-        cMsg("Unable to find any shipments. Please place some")
+    if(!SScan){
+        if(Shipments:count() > 0){
+            cMsg("Found: " + Shipments:count() + " shipments!")
+        } else {
+            cMsg("Unable to find any shipments. Please place some")
+        }
     }
     Scan = 0
 }
@@ -321,6 +328,16 @@ if(State > 0 && State < 4){
     if(User:pos():distance(EGP:entity():pos()) > 120){
         State = 0
         exit()
+    }
+}
+
+if(State == 0){
+    timer("Silent_Check",TimerCheck * 1000)
+    
+    if(clk("Silent_Check")){
+        Shipments:clear()
+        Scan = 1
+        SScan = 1
     }
 }
 
@@ -460,3 +477,36 @@ if(Update){
 }
 
 ## AUTO UPDATING ##
+
+## MODE ##
+
+if(Mode){
+    findIncludeClass("player")
+    findInSphere(EGP:entity():pos(),200)
+    local Player = findClosest(EGP:entity():pos())
+    
+    if(Player:pos():distance(EGP:entity():pos()) < 100){
+        if(GAIN < 46){
+            GAIN += 2
+            P:setPos(PStart + vec(0,0,GAIN))
+            if(GAIN >= 46){
+                P:soundPlay("Music",0,SoundPath)
+                GAIN = 46
+                State = 0
+            }
+        }
+    } else {
+        if(GAIN != 0){
+            GAIN -= 2
+            P:setPos(PStart + vec(0,0,GAIN))
+            if(GAIN == 0){
+                GAIN = 0
+                soundStop("Music")
+                exit()
+                if(State != 0){
+                    State = 0
+                }
+            }
+        }
+    }
+}
