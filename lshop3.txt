@@ -15,7 +15,7 @@ if(first()){
     
     StoreName = "L-Shop 3"
     CheckOnStart = 1 #<-- If 1, the chip will check for an update once placed.
-    Mode = 1 #<-- Selects mode. (1 = Props, Music, Animated etc.) (0 = Normal, no props no music etc.)
+    Mode = 0 #<-- Selects mode. (1 = Props, Music, Animated etc.) (0 = Normal, no props no music etc.)
     SoundPath = "ambient/music/country_rock_am_radio_loop.wav"     #<-- Sound path for the music played. (Default: ambient/music/country_rock_am_radio_loop.wav)
     
     function number onClick(ID) {
