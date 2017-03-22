@@ -38,7 +38,7 @@ if(first()){
     Scan = 1
     SScan = 0
     State = 0
-    Version = "v2.01"
+    Version = "v3"
     PStart = P:pos()
     cMsg("Welcome " + owner():name() + " to L-Shop 3 CMD Style")
     timer("check_update_on_start",2000)
