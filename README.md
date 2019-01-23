@@ -1,4 +1,5 @@
-This is a Expression 2 code created by imLiaMxo (http://www.steamcommunity.com/id/mwsxitwiterz)
+This is a Expression 2 code created by imLiaMxo (http://www.steamcommunity.com/id/imliamxo)
+This is a public release. For both public and private releases. Checkout my website and login with steam to see what releases you're authorised to view: https://imliamxo.xyz
 
 Manual Installation:
 
